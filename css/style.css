@@ -1,0 +1,20 @@
+main {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.table {
+  width: 100px;
+  height: 100px;
+  border: 1px solid grey;
+  position: relative;
+}
+.table::before {
+  content: "";
+  position: absolute;
+  background-color: black;
+  width: 1px;
+  height: 1px;
+}
