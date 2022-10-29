@@ -2,19 +2,7 @@ window.addEventListener("load", function () {
   globalThis.table = document.querySelector(".table");
   table.style.height = "100px";
   table.style.width = "100px";
-  globalThis.dotList = [
-    {
-      name: "dot",
-      top: 10,
-      left: 0,
-    },
-    {
-      name: "dot",
-      top: 0,
-      left: 10,
-    },
-  ];
-
+  globalThis.dotList = [];
   table.addEventListener("click", addDot);
 
   updateTable();
@@ -32,18 +20,8 @@ function init() {
 }
 
 function updateTable() {
-  table.innerHTML = "";
   dotList.forEach((element) => {
-    const dot = document.createElement("div");
-    dot.className = element.name;
-    dot.style.top = element.top + "px";
-    dot.style.left = element.left + "px";
-    dot.style.backgroundColor = `rgb(
-      ${Math.floor(Math.random() * 256)},
-      ${Math.floor(Math.random() * 256)},
-      ${Math.floor(Math.random() * 256)}
-    )`;
-    table.appendChild(dot);
+    document.getElementById(element.id).style.left = "100px";
   });
 }
 
@@ -72,8 +50,16 @@ function pxToInt(variable) {
 function addDot(event) {
   dotList.push({
     name: "dot",
-    top: event.offsetY,
-    left: event.offsetX,
+    id: dotList.length,
   });
+
+  const dot = `
+    <div class="dot" 
+    id="${dotList.length - 1} 
+    style="top:${event.offsetY}; 
+    left:${event.offsetX};">
+    </div>
+    `;
+  table.insertAdjacentHTML("afterbegin", dot);
   console.log("event", dotList);
 }
