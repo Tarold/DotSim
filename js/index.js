@@ -4,32 +4,28 @@ window.addEventListener("load", function () {
   table.style.width = "100px";
   globalThis.dotList = [];
   table.addEventListener("click", addDot);
-
-  updateTable();
 });
 
 var intervalId = window.setInterval(function () {
-  updateTable();
   init();
-}, 100);
+}, 500);
 
 function init() {
   dotList.forEach((element) => {
-    moveDot(element, 1, 0);
-  });
-}
-
-function updateTable() {
-  dotList.forEach((element) => {
-    document.getElementById(element.id).style.left = "100px";
+    moveDot(document.getElementById(element.id), 10, 20);
   });
 }
 
 function moveDot(element, x, y) {
-  let xDot = element.left;
-  let yDot = element.top;
+  let xDot = pxToInt(element.style.left);
+  let yDot = pxToInt(element.style.top);
   let xTable = pxToInt(table.style.height);
   let yTable = pxToInt(table.style.width);
+  element.style.backgroundColor = `rgb(
+    ${Math.floor(Math.random() * 256)},
+    ${Math.floor(Math.random() * 256)},
+    ${Math.floor(Math.random() * 256)}
+  )`;
   xDot += x;
   if (xDot > xTable) {
     xDot -= xTable;
@@ -37,29 +33,27 @@ function moveDot(element, x, y) {
   yDot += y;
   if (yDot > yTable) {
     yDot -= yTable;
-  }
-  element.left = xDot;
-  element.top = yDot;
+  } //add clone, that appear left on screen
+  element.style.left = xDot + "px";
+  element.style.top = yDot + "px";
+}
+
+function addDot(event) {
+  const card = document.createElement("div");
+  card.className = "dot";
+  card.id = dotList.length;
+  card.setAttribute("style", `left:${event.offsetX}px; top:${event.offsetY}px`);
+
+  table.insertAdjacentElement("afterbegin", card);
+
+  dotList.push({
+    name: "dot",
+    id: dotList.length,
+  });
+  console.log("event", dotList);
 }
 
 function pxToInt(variable) {
   let num = Number(variable.replace(/px$/, ""));
   return num;
-}
-
-function addDot(event) {
-  dotList.push({
-    name: "dot",
-    id: dotList.length,
-  });
-
-  const dot = `
-    <div class="dot" 
-    id="${dotList.length - 1} 
-    style="top:${event.offsetY}; 
-    left:${event.offsetX};">
-    </div>
-    `;
-  table.insertAdjacentHTML("afterbegin", dot);
-  console.log("event", dotList);
 }
