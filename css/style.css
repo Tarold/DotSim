@@ -10,9 +10,9 @@ main {
   height: 100px;
   border: 1px solid grey;
   position: relative;
+  transform: scale(3);
 }
-.table::before {
-  content: "";
+.dot {
   position: absolute;
   background-color: black;
   width: 1px;
