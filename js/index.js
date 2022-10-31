@@ -4,9 +4,6 @@ window.addEventListener("load", function () {
   table.style.width = "100px";
   globalThis.dotList = [];
   table.addEventListener("click", addDot);
-  for (let index = 0; index < 500; index++) {
-    addDot(Math.floor(Math.random() * 100), Math.floor(Math.random() * 100));
-  }
 });
 
 var intervalId = window.setInterval(function () {
@@ -15,25 +12,34 @@ var intervalId = window.setInterval(function () {
 
 function init() {
   dotList.forEach((element) => {
-    moveDot(document.getElementById(element.id), 20, 20);
+    moveDot(document.getElementById(element.id), 10, 20);
   });
 }
 
 function moveDot(element, x, y) {
   let xDot = pxToInt(element.style.left);
   let yDot = pxToInt(element.style.top);
-  let xTable = pxToInt(table.style.height);
-  let yTable = pxToInt(table.style.width);
+  let xTable = pxToInt(table.style.height) - 1;
+  let yTable = pxToInt(table.style.width) - 1;
   xDot += x;
   if (xDot > xTable) {
-    xDot -= xTable;
+    xDot = xTable;
+  } else if (xDot < 0) {
+    xDot = 0;
   }
   yDot += y;
   if (yDot > yTable) {
-    yDot -= yTable;
-  } //add clone, that appear left on screen
+    yDot = yTable;
+  } else if (yDot < 0) {
+    yDot = 0;
+  }
   element.style.left = xDot + "px";
   element.style.top = yDot + "px";
+  if (element.dataset.hungry > 0) {
+    element.dataset.hungry -= 0.2;
+  } else {
+    element.dataset.hungry = 0;
+  }
 }
 
 function addDot(event) {
@@ -42,13 +48,9 @@ function addDot(event) {
   card.id = dotList.length;
   card.setAttribute(
     "style",
-    `left:${event.offsetX}px; top:${event.offsetY}px; background-color:
-     rgb(
-    ${Math.floor(Math.random() * 256)},
-    ${Math.floor(Math.random() * 256)},
-    ${Math.floor(Math.random() * 256)}
-  )`
+    `left:${event.offsetX}px; top:${event.offsetY}px;`
   );
+  card.dataset.hungry = 4;
   table.insertAdjacentElement("afterbegin", card);
 
   dotList.push({
@@ -58,27 +60,6 @@ function addDot(event) {
   console.log("event", dotList);
 }
 
-function addDot(offsetX, offsetY) {
-  const card = document.createElement("div");
-  card.className = "dot";
-  card.id = dotList.length;
-  card.setAttribute(
-    "style",
-    `left:${offsetX}px; top:${offsetY}px; background-color:
-     rgb(
-    ${Math.floor(Math.random() * 256)},
-    ${Math.floor(Math.random() * 256)},
-    ${Math.floor(Math.random() * 256)}
-  )`
-  );
-  table.insertAdjacentElement("afterbegin", card);
-
-  dotList.push({
-    name: "dot",
-    id: dotList.length,
-  });
-  console.log("event", dotList);
-}
 function pxToInt(variable) {
   let num = Number(variable.replace(/px$/, ""));
   return num;

@@ -14,8 +14,24 @@ main {
 }
 .dot {
   position: absolute;
-  background-color: black;
+  background-color: blue;
   width: 1px;
   height: 1px;
   transition: all 0.5s;
+}
+
+[data-hungry^="2"] {
+  background-color: rgb(140, 0, 255);
+}
+
+[data-hungry^="1"] {
+  background-color: rgb(255, 0, 149);
+}
+[data-hungry^="0"],
+[data-hungry^="-"] {
+  background-color: rgb(255, 0, 0);
+}
+[show-parametrs="true"]::after {
+  position: absolute;
+  content: attr(data-hungry);
 }
