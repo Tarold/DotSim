@@ -4,6 +4,9 @@ window.addEventListener("load", function () {
   table.style.width = "100px";
   globalThis.dotList = [];
   table.addEventListener("click", addDot);
+  for (let index = 0; index < 500; index++) {
+    addDot(Math.floor(Math.random() * 100), Math.floor(Math.random() * 100));
+  }
 });
 
 var intervalId = window.setInterval(function () {
@@ -12,7 +15,7 @@ var intervalId = window.setInterval(function () {
 
 function init() {
   dotList.forEach((element) => {
-    moveDot(document.getElementById(element.id), 10, 20);
+    moveDot(document.getElementById(element.id), 20, 20);
   });
 }
 
@@ -21,11 +24,6 @@ function moveDot(element, x, y) {
   let yDot = pxToInt(element.style.top);
   let xTable = pxToInt(table.style.height);
   let yTable = pxToInt(table.style.width);
-  element.style.backgroundColor = `rgb(
-    ${Math.floor(Math.random() * 256)},
-    ${Math.floor(Math.random() * 256)},
-    ${Math.floor(Math.random() * 256)}
-  )`;
   xDot += x;
   if (xDot > xTable) {
     xDot -= xTable;
@@ -42,8 +40,15 @@ function addDot(event) {
   const card = document.createElement("div");
   card.className = "dot";
   card.id = dotList.length;
-  card.setAttribute("style", `left:${event.offsetX}px; top:${event.offsetY}px`);
-
+  card.setAttribute(
+    "style",
+    `left:${event.offsetX}px; top:${event.offsetY}px; background-color:
+     rgb(
+    ${Math.floor(Math.random() * 256)},
+    ${Math.floor(Math.random() * 256)},
+    ${Math.floor(Math.random() * 256)}
+  )`
+  );
   table.insertAdjacentElement("afterbegin", card);
 
   dotList.push({
@@ -53,6 +58,27 @@ function addDot(event) {
   console.log("event", dotList);
 }
 
+function addDot(offsetX, offsetY) {
+  const card = document.createElement("div");
+  card.className = "dot";
+  card.id = dotList.length;
+  card.setAttribute(
+    "style",
+    `left:${offsetX}px; top:${offsetY}px; background-color:
+     rgb(
+    ${Math.floor(Math.random() * 256)},
+    ${Math.floor(Math.random() * 256)},
+    ${Math.floor(Math.random() * 256)}
+  )`
+  );
+  table.insertAdjacentElement("afterbegin", card);
+
+  dotList.push({
+    name: "dot",
+    id: dotList.length,
+  });
+  console.log("event", dotList);
+}
 function pxToInt(variable) {
   let num = Number(variable.replace(/px$/, ""));
   return num;
