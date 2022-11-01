@@ -20,12 +20,19 @@ main {
   transition: all 0.5s;
 }
 
+.food {
+  position: absolute;
+  background-color: greenyellow;
+  width: 1px;
+  height: 1px;
+}
+
 [data-hungry^="2"] {
   background-color: rgb(140, 0, 255);
 }
 
 [data-hungry^="1"] {
-  background-color: rgb(255, 0, 149);
+  background-color: rgb(182, 33, 150);
 }
 [data-hungry^="0"],
 [data-hungry^="-"] {
