@@ -39,6 +39,7 @@ function moveDot(element, x, y) {
     element.dataset.hungry -= 0.2;
   } else {
     element.dataset.hungry = 0;
+    deadDot(element);
   }
 }
 
@@ -57,10 +58,17 @@ function addDot(event) {
     name: "dot",
     id: dotList.length,
   });
-  console.log("event", dotList);
 }
 
 function pxToInt(variable) {
   let num = Number(variable.replace(/px$/, ""));
   return num;
+}
+
+function deadDot(element) {
+  dotList = dotList.filter(function (value) {
+    return value["id"] != element.id;
+  });
+  element.remove();
+  console.log("dotList", dotList);
 }
