@@ -5,21 +5,20 @@ window.addEventListener("load", function () {
   table.style.width = "100px";
   globalThis.dotList = [];
   globalThis.dotCount = 0;
-  globalThis.dotIndex = 0;
   table.addEventListener("click", addDot);
 });
 
-var intervalId = window.setInterval(function () {
+setInterval(function () {
   init();
-  console.log("first", 1000 / dotList.length, dotList.length);
-}, 1000 / (dotList.length + 1));
+}, 1000);
 
 function init() {
   if (dotList.length != 0) {
-    moveDot(document.getElementById(dotList[dotIndex]["id"]), 10, 20);
-    if (++dotIndex === dotList.length) {
-      dotIndex = 0;
-    }
+    dotList.forEach((element, i) => {
+      setTimeout(() => {
+        moveDot(document.getElementById(element["id"]), 10, 20);
+      }, i * (1000 / dotList.length));
+    });
   }
 }
 
@@ -76,6 +75,5 @@ function deadDot(element) {
   dotList = dotList.filter(function (value) {
     return value["id"] != element.id;
   });
-  dotIndex--;
   element.remove();
 }
