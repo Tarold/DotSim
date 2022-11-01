@@ -1,19 +1,26 @@
+let dotList = [];
 window.addEventListener("load", function () {
   globalThis.table = document.querySelector(".table");
   table.style.height = "100px";
   table.style.width = "100px";
   globalThis.dotList = [];
+  globalThis.dotCount = 0;
+  globalThis.dotIndex = 0;
   table.addEventListener("click", addDot);
 });
 
 var intervalId = window.setInterval(function () {
   init();
-}, 500);
+  console.log("first", 1000 / dotList.length, dotList.length);
+}, 1000 / (dotList.length + 1));
 
 function init() {
-  dotList.forEach((element) => {
-    moveDot(document.getElementById(element.id), 10, 20);
-  });
+  if (dotList.length != 0) {
+    moveDot(document.getElementById(dotList[dotIndex]["id"]), 10, 20);
+    if (++dotIndex === dotList.length) {
+      dotIndex = 0;
+    }
+  }
 }
 
 function moveDot(element, x, y) {
@@ -46,7 +53,7 @@ function moveDot(element, x, y) {
 function addDot(event) {
   const card = document.createElement("div");
   card.className = "dot";
-  card.id = dotList.length;
+  card.id = dotCount;
   card.setAttribute(
     "style",
     `left:${event.offsetX}px; top:${event.offsetY}px;`
@@ -56,7 +63,7 @@ function addDot(event) {
 
   dotList.push({
     name: "dot",
-    id: dotList.length,
+    id: dotCount++,
   });
 }
 
@@ -69,6 +76,6 @@ function deadDot(element) {
   dotList = dotList.filter(function (value) {
     return value["id"] != element.id;
   });
+  dotIndex--;
   element.remove();
-  console.log("dotList", dotList);
 }
