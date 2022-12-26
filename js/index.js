@@ -5,23 +5,20 @@ let table = document.querySelector('.table');
 table.style.height = '50px';
 table.style.width = '50px';
 
-let dotList = [];
-let dotCount = 0;
-let foodList = [];
-let foodCount = 0;
-
 table.addEventListener('click', addDot);
+
+const sys = new SimSystem();
 
 setInterval(function () {
   init();
 }, 1000);
 
 function init() {
-  if (dotList.length != 0) {
-    dotList.forEach((element, i) => {
+  if (sys.dotList.length != 0) {
+    sys.dotList.forEach((element, i) => {
       setTimeout(() => {
         element.think();
-      }, i * (1000 / dotList.length));
+      }, i * (1000 / sys.dotList.length));
     });
   }
 }
@@ -31,7 +28,7 @@ function addDot(event) {
   if (otherCheckbox.checked) {
     const food = document.createElement('div');
     food.className = 'food';
-    food.id = foodCount + 'f';
+    food.id = sys.foodCount + 'f';
     food.setAttribute(
       'style',
       `left:${event.offsetX}px; top:${event.offsetY}px; z-index:0;`
@@ -39,16 +36,18 @@ function addDot(event) {
     food.dataset.satiety = 0.2;
     table.insertAdjacentElement('afterbegin', food);
 
-    foodList.push({
-      name: 'dot',
-      object: document.getElementById(foodCount + 'f'),
-      id: foodCount++ + 'f',
-      reserved: false,
-    });
+    sys.foodList.push(
+      new Food(
+        'dot',
+        document.getElementById(sys.foodCount + 'f'),
+        sys.foodCount++ + 'f',
+        false
+      )
+    );
   } else {
     const card = document.createElement('div');
     card.className = 'dot';
-    card.id = dotCount;
+    card.id = sys.dotCount;
     card.setAttribute(
       'style',
       `left:${event.offsetX}px; top:${event.offsetY}px; z-index:1;`
@@ -56,8 +55,28 @@ function addDot(event) {
     card.dataset.hungry = 4;
     table.insertAdjacentElement('afterbegin', card);
 
-    dotList.push(new Dot('dot', document.getElementById(dotCount), dotCount++));
+    sys.dotList.push(
+      new Dot('dot', document.getElementById(sys.dotCount), sys.incDotCount())
+    );
   }
+}
+
+function SimSystem() {
+  this.dotList = [];
+  this.dotCount = 0;
+  this.foodList = [];
+  this.foodCount = 0;
+}
+
+SimSystem.prototype.incDotCount = function () {
+  return this.dotCount++;
+};
+
+function Food(name, object, id) {
+  this.name = name;
+  this.object = object;
+  this.id = id;
+  this.reserved = false;
 }
 
 function Dot(name, object, id) {
@@ -76,7 +95,8 @@ Dot.prototype.think = function () {
   }
   const dotStyle = this.object.style;
   let minDist = [Infinity];
-  foodList.forEach((food) => {
+  sys.foodList.forEach((food) => {
+    console.log('food :>> ', food);
     if (!food.reserved) {
       const foodStyle = food.object.style;
       const dist = distance(
@@ -171,7 +191,7 @@ function deadDot(element) {
 }
 
 function deadFood(element) {
-  foodList = foodList.filter(function (value) {
+  sys.foodList = sys.foodList.filter(function (value) {
     return value.id != element.id;
   });
   element.remove();
@@ -180,7 +200,7 @@ function deadFood(element) {
 function createFood() {
   const food = document.createElement('div');
   food.className = 'food';
-  food.id = foodCount + 'f';
+  food.id = sys.foodCount + 'f';
   food.setAttribute(
     'style',
     `left:${(Math.random() * pxToInt(table.style.width)) | 0}px; top:${
@@ -191,12 +211,14 @@ function createFood() {
   food.dataset.reserved = false;
   table.insertAdjacentElement('afterbegin', food);
 
-  foodList.push({
-    name: 'dot',
-    object: document.getElementById(foodCount + 'f'),
-    id: foodCount++ + 'f',
-    reserved: false,
-  });
+  sys.foodList.push(
+    new Food(
+      'dot',
+      document.getElementById(sys.foodCount + 'f'),
+      sys.foodCount++ + 'f',
+      false
+    )
+  );
 }
 
 function distance(x1, y1, x2, y2) {
