@@ -1,10 +1,13 @@
-globalThis.table = document.querySelector('.table');
+let table = document.querySelector('.table');
+
 table.style.height = '100px';
 table.style.width = '100px';
-globalThis.dotList = [];
-globalThis.dotCount = 0;
-globalThis.foodList = [];
-globalThis.foodCount = 0;
+
+let dotList = [];
+let dotCount = 0;
+let foodList = [];
+let foodCount = 0;
+
 table.addEventListener('click', addDot);
 
 setInterval(function () {
