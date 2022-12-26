@@ -1,7 +1,9 @@
+'strict mode';
+
 let table = document.querySelector('.table');
 
-table.style.height = '100px';
-table.style.width = '100px';
+table.style.height = '50px';
+table.style.width = '50px';
 
 let dotList = [];
 let dotCount = 0;
@@ -24,33 +26,6 @@ function init() {
   }
 }
 
-function moveDot(element, x, y) {
-  let xDot = pxToInt(element.style.left);
-  let yDot = pxToInt(element.style.top);
-  let xTable = pxToInt(table.style.height) - 1;
-  let yTable = pxToInt(table.style.width) - 1;
-  xDot += x;
-  if (xDot > xTable) {
-    xDot = xTable;
-  } else if (xDot < 0) {
-    xDot = 0;
-  }
-  yDot += y;
-  if (yDot > yTable) {
-    yDot = yTable;
-  } else if (yDot < 0) {
-    yDot = 0;
-  }
-  element.style.left = xDot + 'px';
-  element.style.top = yDot + 'px';
-  if (element.dataset.hungry > 0) {
-    element.dataset.hungry -= 0.1;
-  } else {
-    element.dataset.hungry = 0;
-    deadDot(element);
-  }
-}
-
 function addDot(event) {
   const otherCheckbox = document.querySelector('#horns');
   if (otherCheckbox.checked) {
@@ -61,13 +36,14 @@ function addDot(event) {
       'style',
       `left:${event.offsetX}px; top:${event.offsetY}px; z-index:0;`
     );
-    food.dataset.satiety = 2;
+    food.dataset.satiety = 0.2;
     table.insertAdjacentElement('afterbegin', food);
 
     foodList.push({
       name: 'dot',
       object: document.getElementById(foodCount + 'f'),
       id: foodCount++ + 'f',
+      reserved: false,
     });
   } else {
     const card = document.createElement('div');
@@ -88,35 +64,47 @@ function Dot(name, object, id) {
   this.name = name;
   this.object = object;
   this.id = id;
+  this.movingTo = undefined;
 }
 
+//коли точка їсть, переноситься до кінця списку
+
 Dot.prototype.think = function () {
+  if (this.movingTo) {
+    eatDot(this.object, this.movingTo);
+    this.movingTo = false;
+  }
   const dotStyle = this.object.style;
   let minDist = [Infinity];
-  foodList.forEach((element) => {
-    const foodStyle = element.object.style;
-    const dist = distance(
-      pxToInt(dotStyle.left),
-      pxToInt(dotStyle.top),
-      pxToInt(foodStyle.left),
-      pxToInt(foodStyle.top)
-    );
-    if (minDist[0] > dist) {
-      minDist[0] = dist;
-      minDist[1] = element.object;
+  foodList.forEach((food) => {
+    if (!food.reserved) {
+      const foodStyle = food.object.style;
+      const dist = distance(
+        pxToInt(dotStyle.left),
+        pxToInt(dotStyle.top),
+        pxToInt(foodStyle.left),
+        pxToInt(foodStyle.top)
+      );
+      if (minDist[0] > dist) {
+        minDist[0] = dist;
+        minDist[1] = food;
+      }
     }
   });
   if (minDist[1] !== undefined) {
     if (minDist[0] < 1) {
-      eatDot(this.object, minDist[1]);
+      eatDot(this.object, minDist[1].object);
     } else {
-      findPath(this.object, minDist[1], minDist[0]);
+      minDist[1].reserved = true;
+      this.movingTo = minDist[1].object;
+      this.findPath(minDist[1].object);
     }
     //if dist <1 => eating
   }
 };
 
-function findPath(element, object) {
+Dot.prototype.findPath = function (object) {
+  const element = this.object;
   const jumpDist = 10;
   let xDot = pxToInt(element.style.left);
   let yDot = pxToInt(element.style.top);
@@ -127,12 +115,41 @@ function findPath(element, object) {
 
   let y = yTarget - yDot;
 
-  moveDot(element, x, y);
+  this.moveDot(x, y);
 
   if (x < jumpDist && y < jumpDist) {
-    eatDot(element, object);
+    //eatDot(element, object);
   }
-}
+};
+
+Dot.prototype.moveDot = function (x, y) {
+  const element = this.object;
+  let xDot = pxToInt(element.style.left);
+  let yDot = pxToInt(element.style.top);
+  let xTable = pxToInt(table.style.height) - 1;
+  let yTable = pxToInt(table.style.width) - 1;
+  xDot += x;
+  if (xDot > xTable) {
+    xDot = xTable;
+  } else if (xDot < 0) {
+    xDot = 0;
+  }
+  yDot += y;
+  if (yDot > yTable) {
+    yDot = yTable;
+  } else if (yDot < 0) {
+    yDot = 0;
+  }
+
+  element.style.left = xDot + 'px';
+  element.style.top = yDot + 'px';
+  if (element.dataset.hungry > 0) {
+    element.dataset.hungry -= 0.1;
+  } else {
+    element.dataset.hungry = 0;
+    deadDot(element);
+  }
+};
 
 function pxToInt(variable) {
   let num = Number(variable.replace(/px$/, ''));
@@ -170,13 +187,15 @@ function createFood() {
       (Math.random() * pxToInt(table.style.height)) | 0
     }px; z-index:0;`
   );
-  food.dataset.satiety = 2;
+  food.dataset.satiety = 0.2;
+  food.dataset.reserved = false;
   table.insertAdjacentElement('afterbegin', food);
 
   foodList.push({
     name: 'dot',
     object: document.getElementById(foodCount + 'f'),
     id: foodCount++ + 'f',
+    reserved: false,
   });
 }
 
