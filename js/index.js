@@ -1,13 +1,11 @@
-window.addEventListener('load', function () {
-  globalThis.table = document.querySelector('.table');
-  table.style.height = '100px';
-  table.style.width = '100px';
-  globalThis.dotList = [];
-  globalThis.dotCount = 0;
-  globalThis.foodList = [];
-  globalThis.foodCount = 0;
-  table.addEventListener('click', addDot);
-});
+globalThis.table = document.querySelector('.table');
+table.style.height = '100px';
+table.style.width = '100px';
+globalThis.dotList = [];
+globalThis.dotCount = 0;
+globalThis.foodList = [];
+globalThis.foodCount = 0;
+table.addEventListener('click', addDot);
 
 setInterval(function () {
   init();
@@ -17,8 +15,6 @@ function init() {
   if (dotList.length != 0) {
     dotList.forEach((element, i) => {
       setTimeout(() => {
-        // moveDot(element.object, Math.round((Math.random() - 0.5) * 2), -2);
-        //видалення відкладуеться нанаступний кадр, течия змивае а потім приходиться знову ідти -> він не встигае їсти
         element.think();
       }, i * (1000 / dotList.length));
     });
@@ -108,23 +104,31 @@ Dot.prototype.think = function () {
     }
   });
   if (minDist[1] !== undefined) {
-    //thinking
     if (minDist[0] < 1) {
       eatDot(this.object, minDist[1]);
     } else {
-      findPath(this.object, minDist[1]);
+      findPath(this.object, minDist[1], minDist[0]);
     }
     //if dist <1 => eating
   }
 };
 
 function findPath(element, object) {
+  const jumpDist = 10;
   let xDot = pxToInt(element.style.left);
   let yDot = pxToInt(element.style.top);
   let xTarget = pxToInt(object.style.left);
   let yTarget = pxToInt(object.style.top);
 
-  moveDot(element, xTarget - xDot, yTarget - yDot);
+  let x = xTarget - xDot;
+
+  let y = yTarget - yDot;
+
+  moveDot(element, x, y);
+
+  if (x < jumpDist && y < jumpDist) {
+    eatDot(element, object);
+  }
 }
 
 function pxToInt(variable) {
@@ -136,19 +140,43 @@ function eatDot(dot, food) {
   dot.dataset.hungry =
     Number(dot.dataset.hungry) + Number(food.dataset.satiety);
   deadFood(food);
+  createFood();
 }
+
 function deadDot(element) {
   dotList = dotList.filter(function (value) {
     return value.id != element.id;
   });
   element.remove();
 }
+
 function deadFood(element) {
   foodList = foodList.filter(function (value) {
     return value.id != element.id;
   });
   element.remove();
 }
+
+function createFood() {
+  const food = document.createElement('div');
+  food.className = 'food';
+  food.id = foodCount + 'f';
+  food.setAttribute(
+    'style',
+    `left:${(Math.random() * pxToInt(table.style.width)) | 0}px; top:${
+      (Math.random() * pxToInt(table.style.height)) | 0
+    }px; z-index:0;`
+  );
+  food.dataset.satiety = 2;
+  table.insertAdjacentElement('afterbegin', food);
+
+  foodList.push({
+    name: 'dot',
+    object: document.getElementById(foodCount + 'f'),
+    id: foodCount++ + 'f',
+  });
+}
+
 function distance(x1, y1, x2, y2) {
   return Math.hypot(x2 - x1, y2 - y1);
 }
