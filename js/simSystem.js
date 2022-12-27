@@ -1,101 +1,121 @@
+'use strict';
+
 import Dot from './dot.js';
 import Food from './food.js';
 
 //modules for diferent scripts
 //TODO коли точка поїсть, вона переноситься до кінця списку, щоб поїли ті, що не їли
 //TODO точки повинні з'являтися на наступному ході(додати стан появи, або созрівання)
-//TODO коли немає їжі точка швидко зникає
 
-function SimSystem(table) {
-  this.dotList = [];
-  this.dotCount = 0;
-  this.foodList = [];
-  this.foodCount = 0;
-  this.table = table;
-}
+//TODO коли точка чекає, вона може виходити за межі
 
-SimSystem.prototype.init = function () {
-  if (this.dotList.length != 0) {
-    this.dotList.forEach((dot, i) => {
-      setTimeout(() => {
-        dot.think();
-      }, i * (1000 / this.dotList.length));
-    });
+class SimSystem {
+  constructor(table) {
+    this.dotList = [];
+    this.dotCount = 0;
+    this.foodList = [];
+    this.foodCount = 0;
+    this.table = table;
   }
-};
 
-SimSystem.prototype.addFood = function (x, y) {
-  const food = document.createElement('div');
-  food.className = 'food';
-  food.id = this.foodCount + 'f';
-  food.setAttribute('style', `left:${x}px; top:${y}px; z-index:0;`);
-  food.dataset.satiety = 0.2;
-  this.table.insertAdjacentElement('afterbegin', food);
+  init() {
+    if (this.dotList.length != 0) {
+      this.dotList.forEach((dot, i) => {
+        setTimeout(() => {
+          this.processingDot(dot);
+        }, i * (1000 / this.dotList.length));
+      });
+    }
+  }
 
-  this.foodList.push(
-    new Food(
-      'dot',
-      document.getElementById(this.foodCount + 'f'),
-      this.incFoodCount() + 'f',
-      false
-    )
-  );
-};
+  processingDot(dot) {
+    dot.findObjective(this.foodList);
 
-SimSystem.prototype.addDot = function (x, y) {
-  const dot = document.createElement('div');
-  dot.className = 'dot';
-  dot.id = this.dotCount;
-  dot.setAttribute('style', `left:${x}px; top:${y}px; z-index:1;`);
-  dot.dataset.hungry = 4;
-  this.table.insertAdjacentElement('afterbegin', dot);
+    console.log(dot.status);
+    switch (true) {
+      case dot.status === 'move': //move to eat
+        dot.goingToEat();
+        if (dot.isHungry()) {
+          this.removeDot(dot);
+        }
+        break;
 
-  this.dotList.push(
-    new Dot(
-      'dot',
-      document.getElementById(this.dotCount),
-      this.incDotCount(),
-      function callbackFunction() {
-        this.eatDot;
-      },
-      this.foodList,
-      {
-        width: this.table.style.width,
-        height: this.table.style.height,
-      }
-    )
-  );
-  debugger;
-};
+      case dot.status === 'eat': //eat
+        this.eatDot(dot, dot.objective);
+        break;
 
-SimSystem.prototype.removeObject = function (obj) {
-  let list = obj.id.includes('f') ? this.foodList : this.dotList;
+      default: //wait
+        dot.moveDot([
+          Math.floor(Math.random() * 21 - 10),
+          Math.floor(Math.random() * 21 - 10),
+        ]);
+        break;
+    }
+  }
 
-  list = list.filter(function (value) {
-    return value.id != obj.id;
-  });
-  obj.remove();
-};
+  addFood(x, y) {
+    const food = document.createElement('div');
+    food.className = 'food';
+    food.id = this.foodCount + 'f';
+    food.setAttribute('style', `left:${x}px; top:${y}px; z-index:0;`);
+    food.dataset.satiety = 0.2;
+    this.table.insertAdjacentElement('afterbegin', food);
 
-SimSystem.prototype.incDotCount = function () {
-  return this.dotCount++;
-};
+    this.foodList.push(
+      new Food(
+        'dot',
+        document.getElementById(this.foodCount + 'f'),
+        this.incFoodCount() + 'f',
+        false
+      )
+    );
+  }
 
-SimSystem.prototype.incFoodCount = function () {
-  return this.foodCount++;
-};
+  addDot(x, y) {
+    const dot = document.createElement('div');
+    dot.className = 'dot';
+    dot.id = this.dotCount;
+    dot.setAttribute('style', `left:${x}px; top:${y}px; z-index:1;`);
+    dot.dataset.hungry = 4;
+    this.table.insertAdjacentElement('afterbegin', dot);
 
-SimSystem.prototype.eatDot = function (dot, food) {
-  dot.setHungry = Number(food.dataset.satiety); //TODO make get satiety
-  this.removeObject(food);
-  this.addFood(
-    (Math.random() * pxToInt(this.table.style.width)) | 0,
-    (Math.random() * pxToInt(this.table.style.height)) | 0
-  );
-};
+    this.dotList.push(new Dot('dot', document.getElementById(this.dotCount)));
+  }
 
-SimSystem.prototype.getTable = function () {
-  return { height: this.table.style.height, width: this.table.style.width };
-};
+  removeDot(obj) {
+    this.dotList = this.dotList.filter(function (value) {
+      return value.id != obj.id;
+    });
+    obj.object.remove();
+  }
+
+  removeFood(obj) {
+    this.foodList = this.foodList.filter(function (value) {
+      return value.id != obj.id;
+    });
+    obj.object.remove();
+  }
+
+  incDotCount() {
+    return this.dotCount++;
+  }
+
+  incFoodCount() {
+    return this.foodCount++;
+  }
+
+  eatDot(dot, food) {
+    dot.eat(Number(food.object.dataset.satiety));
+    this.removeFood(food);
+  }
+
+  randomSpawnFood() {
+    const sceneParam = localStorage['params'] || 'defaultValue';
+    this.addFood(
+      (Math.random() * sceneParam.width) | 0,
+      (Math.random() * sceneParam.height) | 0
+    );
+  }
+}
 
 export default SimSystem;

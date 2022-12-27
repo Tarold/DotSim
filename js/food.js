@@ -1,8 +1,10 @@
-function Food(name, object, id) {
-  this.name = name;
-  this.object = object;
-  this.id = id;
-  this.reserved = false;
+class Food {
+  constructor(name, object, id) {
+    this.name = name;
+    this.object = object;
+    this.id = id;
+    this.reserved = false;
+  }
 }
 
 export default Food;
