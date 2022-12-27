@@ -7,8 +7,6 @@ import Food from './food.js';
 //TODO коли точка поїсть, вона переноситься до кінця списку, щоб поїли ті, що не їли
 //TODO точки повинні з'являтися на наступному ході(додати стан появи, або созрівання)
 
-//TODO коли точка чекає, вона може виходити за межі
-
 class SimSystem {
   constructor(table) {
     this.dotList = [];
@@ -117,7 +115,16 @@ class SimSystem {
   }
 
   moveToBorders() {
-    console.log('object :>> '); //TODO потрібно дописати
+    const list = [...this.dotList, ...this.foodList];
+    const a = new Dot();
+    list.forEach((dot) => {
+      const [x, y] = a.checkForBorders(
+        Number(dot.object.style.left.replace(/px$/, '')),
+        Number(dot.object.style.top.replace(/px$/, ''))
+      );
+      dot.object.style.left = x + 'px';
+      dot.object.style.top = y + 'px';
+    });
   }
 }
 

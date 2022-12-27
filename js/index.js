@@ -21,6 +21,9 @@ function Init() {
   } else {
     wTable.value = Number(localStorage.getItem('width'));
     hTable.value = Number(localStorage.getItem('height'));
+
+    table.style.width = hTable.value + 'px';
+    table.style.height = wTable.value + 'px';
   }
 }
 
@@ -28,7 +31,7 @@ function applyData() {
   localStorage.setItem('height', hTable.value);
   localStorage.setItem('width', wTable.value);
 
-  table.style.width = hTable + 'px';
+  table.style.width = hTable.value + 'px';
   table.style.height = wTable.value + 'px';
 
   sys.moveToBorders();

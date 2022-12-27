@@ -90,7 +90,6 @@ class Dot {
     const height = localStorage.getItem('height');
     const width = localStorage.getItem('width');
 
-    console.log(width);
     const xTable = height - 1;
     const yTable = width - 1;
 
