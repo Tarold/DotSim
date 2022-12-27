@@ -110,11 +110,14 @@ class SimSystem {
   }
 
   randomSpawnFood() {
-    const sceneParam = localStorage['params'] || 'defaultValue';
-    this.addFood(
-      (Math.random() * sceneParam.width) | 0,
-      (Math.random() * sceneParam.height) | 0
-    );
+    const height = localStorage.getItem('height');
+    const width = localStorage.getItem('width');
+
+    this.addFood((Math.random() * width) | 0, (Math.random() * height) | 0);
+  }
+
+  moveToBorders() {
+    console.log('object :>> '); //TODO потрібно дописати
   }
 }
 

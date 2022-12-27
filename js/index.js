@@ -1,17 +1,38 @@
 import SimSystem from './simSystem.js';
 
 const table = document.querySelector('.table');
+const buttApply = document.querySelector('#Apply');
+const hTable = document.querySelector('#height');
+const wTable = document.querySelector('#width');
 const sys = new SimSystem(table);
 
-localStorage['params'] = {
-  heightTable: document.querySelector('#height').value,
-  widthTable: document.querySelector('#width').value,
-};
 setInterval(function () {
   sys.init();
 }, 1000);
 
-table.addEventListener('click', addDot);
+function Init() {
+  table.addEventListener('click', addDot);
+
+  buttApply.addEventListener('click', applyData);
+
+  if (localStorage.getItem('height') === null) {
+    localStorage.setItem('height', hTable.value);
+    localStorage.setItem('width', wTable.value);
+  } else {
+    wTable.value = Number(localStorage.getItem('width'));
+    hTable.value = Number(localStorage.getItem('height'));
+  }
+}
+
+function applyData() {
+  localStorage.setItem('height', hTable.value);
+  localStorage.setItem('width', wTable.value);
+
+  table.style.width = hTable + 'px';
+  table.style.height = wTable.value + 'px';
+
+  sys.moveToBorders();
+}
 
 function addDot(event) {
   const otherCheckbox = document.querySelector('#horns');
@@ -21,3 +42,5 @@ function addDot(event) {
     sys.addDot(event.offsetX, event.offsetY);
   }
 }
+
+Init();

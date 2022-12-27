@@ -63,10 +63,8 @@ class Dot {
   }
 
   findPath(object) {
-    const element = this.object;
-
-    let xDot = pxToInt(element.style.left);
-    let yDot = pxToInt(element.style.top);
+    let xDot = pxToInt(this.object.style.left);
+    let yDot = pxToInt(this.object.style.top);
     let xTarget = pxToInt(object.style.left);
     let yTarget = pxToInt(object.style.top);
 
@@ -77,32 +75,38 @@ class Dot {
   }
 
   moveDot([x, y]) {
-    const element = this.object;
-    const sceneParam = localStorage['params'] || 'defaultValue';
+    let xDot = pxToInt(this.object.style.left);
+    let yDot = pxToInt(this.object.style.top);
 
-    let xDot = pxToInt(element.style.left);
-    let yDot = pxToInt(element.style.top);
+    [xDot, yDot] = this.checkForBorders(xDot + x, yDot + y);
 
-    let xTable = sceneParam.height - 1;
-    let yTable = sceneParam.width - 1;
+    this.object.style.left = xDot + 'px';
+    this.object.style.top = yDot + 'px';
 
-    xDot += x;
+    this.object.dataset.hungry -= 0.1;
+  }
+
+  checkForBorders(xDot, yDot) {
+    const height = localStorage.getItem('height');
+    const width = localStorage.getItem('width');
+
+    console.log(width);
+    const xTable = height - 1;
+    const yTable = width - 1;
+
     if (xDot > xTable) {
       xDot = xTable;
     } else if (xDot < 0) {
       xDot = 0;
     }
-    yDot += y;
+
     if (yDot > yTable) {
       yDot = yTable;
     } else if (yDot < 0) {
       yDot = 0;
     }
 
-    element.style.left = xDot + 'px';
-    element.style.top = yDot + 'px';
-
-    this.object.dataset.hungry -= 0.1;
+    return [xDot, yDot];
   }
 }
 
