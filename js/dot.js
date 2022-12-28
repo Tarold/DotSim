@@ -1,10 +1,11 @@
 'use strict';
 
-class Dot {
+import StandartDot from './StandartDot.js';
+
+class Dot extends StandartDot {
   constructor(name, object, id) {
-    this.name = name;
-    this.object = object;
-    this.id = id;
+    super(name, object, id);
+
     this.status = undefined;
     this.objective = undefined;
   }
@@ -53,11 +54,19 @@ class Dot {
     this.object.dataset.hungry = Number(this.object.dataset.hungry) + number;
   }
 
+  getHungry() {
+    return this.object.dataset.hungry;
+  }
+
+  setHungry(hungry) {
+    this.object.dataset.hungry = hungry;
+  }
+
   isHungry() {
-    if (this.object.dataset.hungry > 0) {
+    if (this.getHungry() > 0) {
       return false;
     } else {
-      this.object.dataset.hungry = 0;
+      this.setHungry(0);
       return true;
     }
   }

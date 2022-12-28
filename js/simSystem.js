@@ -3,9 +3,7 @@
 import Dot from './dot.js';
 import Food from './food.js';
 
-//modules for diferent scripts
-//TODO коли точка поїсть, вона переноситься до кінця списку, щоб поїли ті, що не їли
-//TODO точки повинні з'являтися на наступному ході(додати стан появи, або созрівання)
+//TODO їжа повинні з'являтися на наступному ході(додати стан появи, або созрівання)
 
 class SimSystem {
   constructor(table) {
@@ -18,8 +16,14 @@ class SimSystem {
 
   init() {
     if (this.dotList.length != 0) {
+      const hungryList = this.foodList.sort((a, b) => {
+        if (a === typeof Dot && b === typeof Dot)
+          return a.getHungry() - b.getHungry();
+      });
+
       this.dotList.forEach((dot, i) => {
         setTimeout(() => {
+          dot.findObjective(hungryList);
           this.processingDot(dot);
         }, i * (1000 / this.dotList.length));
       });
@@ -27,9 +31,6 @@ class SimSystem {
   }
 
   processingDot(dot) {
-    dot.findObjective(this.foodList);
-
-    console.log(dot.status);
     switch (true) {
       case dot.status === 'move': //move to eat
         dot.goingToEat();
@@ -40,6 +41,7 @@ class SimSystem {
 
       case dot.status === 'eat': //eat
         this.eatDot(dot, dot.objective);
+        this.randomSpawnFood();
         break;
 
       default: //wait
@@ -47,6 +49,9 @@ class SimSystem {
           Math.floor(Math.random() * 21 - 10),
           Math.floor(Math.random() * 21 - 10),
         ]);
+        if (dot.isHungry()) {
+          this.removeDot(dot);
+        }
         break;
     }
   }
