@@ -12,22 +12,28 @@ main {
   position: relative;
   transform: scale(10);
 }
-.dot {
+.dot,
+.food {
   position: absolute;
-  background-color: blue;
   width: 1px;
   height: 1px;
+  animation: spawn 1s;
   transition: all 0.5s;
+}
+
+.dot {
+  background-color: blue;
+}
+.food {
+  background-color: lightgreen;
 }
 /*
 .dot::after {
   content: attr(data-hungry);
 }*/
-.food {
-  position: absolute;
-  background-color: greenyellow;
-  width: 1px;
-  height: 1px;
+
+[data-satiety^='1'] {
+  background-color: green;
 }
 
 [data-hungry^='2'] {
@@ -44,4 +50,13 @@ main {
 [show-parametrs='true']::after {
   position: absolute;
   content: attr(data-hungry);
+}
+
+@keyframes spawn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

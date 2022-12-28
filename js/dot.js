@@ -8,6 +8,8 @@ class Dot extends StandartDot {
 
     this.status = undefined;
     this.objective = undefined;
+    this.hungryForStep = 0.2;
+    this.limitHungry = 5;
   }
 
   findObjective(foodList) {
@@ -21,7 +23,7 @@ class Dot extends StandartDot {
     let oldDist = Infinity;
 
     foodList.forEach((food) => {
-      if (!food.reserved) {
+      if (!food.reserved && (food.isGrowUp || this.getHungry() < 1)) {
         const foodStyle = food.object.style;
         const dist = distance(
           pxToInt(dotStyle.left),
@@ -52,6 +54,9 @@ class Dot extends StandartDot {
 
   eat(number) {
     this.object.dataset.hungry = Number(this.object.dataset.hungry) + number;
+    if (this.object.dataset.hungry > this.limitHungry) {
+      this.object.dataset.hungry = this.limitHungry;
+    }
   }
 
   getHungry() {
@@ -92,7 +97,7 @@ class Dot extends StandartDot {
     this.object.style.left = xDot + 'px';
     this.object.style.top = yDot + 'px';
 
-    this.object.dataset.hungry -= 0.1;
+    this.object.dataset.hungry -= this.hungryForStep;
   }
 
   checkForBorders(xDot, yDot) {

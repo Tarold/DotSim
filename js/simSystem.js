@@ -3,7 +3,7 @@
 import Dot from './dot.js';
 import Food from './food.js';
 
-//TODO їжа повинні з'являтися на наступному ході(додати стан появи, або созрівання)
+//TODO Added custom params and css styles
 
 class SimSystem {
   constructor(table) {
@@ -26,6 +26,16 @@ class SimSystem {
           dot.findObjective(hungryList);
           this.processingDot(dot);
         }, i * (1000 / this.dotList.length));
+      });
+    }
+
+    if (this.foodList.length != 0) {
+      this.foodList.forEach((food, i) => {
+        setTimeout(() => {
+          if (!food.isGrowUp) {
+            food.growing();
+          }
+        }, i * (1000 / this.foodList.length));
       });
     }
   }
@@ -56,32 +66,37 @@ class SimSystem {
     }
   }
 
-  addFood(x, y) {
+  createFoodObject(x, y) {
     const food = document.createElement('div');
     food.className = 'food';
     food.id = this.foodCount + 'f';
     food.setAttribute('style', `left:${x}px; top:${y}px; z-index:0;`);
     food.dataset.satiety = 0.2;
-    this.table.insertAdjacentElement('afterbegin', food);
+    return food;
+  }
 
+  addFood(x, y) {
+    this.table.insertAdjacentElement('afterbegin', this.createFoodObject(x, y));
     this.foodList.push(
       new Food(
         'dot',
         document.getElementById(this.foodCount + 'f'),
-        this.incFoodCount() + 'f',
-        false
+        this.incFoodCount() + 'f'
       )
     );
   }
 
-  addDot(x, y) {
+  createDotObject(x, y) {
     const dot = document.createElement('div');
     dot.className = 'dot';
     dot.id = this.dotCount;
     dot.setAttribute('style', `left:${x}px; top:${y}px; z-index:1;`);
     dot.dataset.hungry = 4;
-    this.table.insertAdjacentElement('afterbegin', dot);
+    return dot;
+  }
 
+  addDot(x, y) {
+    this.table.insertAdjacentElement('afterbegin', this.createDotObject(x, y));
     this.dotList.push(new Dot('dot', document.getElementById(this.dotCount)));
   }
 
@@ -99,14 +114,20 @@ class SimSystem {
     obj.object.remove();
   }
 
-  incDotCount() {
-    return this.dotCount++;
-  }
-
   incFoodCount() {
-    return this.foodCount++;
+    this.foodCount += 1;
+    if (!Number.isSafeInteger(this.foodCount)) {
+      this.foodCount = 0;
+    }
+    return this.foodCount;
   }
-
+  incDotCount() {
+    this.dotCount += 1;
+    if (!Number.isSafeInteger(this.dotCount)) {
+      this.dotCount = 0;
+    }
+    return this.dotCount;
+  }
   eatDot(dot, food) {
     dot.eat(Number(food.object.dataset.satiety));
     this.removeFood(food);

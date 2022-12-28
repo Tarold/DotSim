@@ -8,7 +8,12 @@ class Food extends StandartDot {
     this.isGrowUp = false;
   }
 
-  growing() {}
+  growing() {
+    this.object.dataset.satiety = Number(this.object.dataset.satiety) + 0.1;
+    if (this.object.dataset.satiety > 1) {
+      this.isGrowUp = true;
+    }
+  }
 }
 
 export default Food;
