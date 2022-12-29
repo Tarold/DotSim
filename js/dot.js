@@ -17,6 +17,12 @@ class Dot extends StandartDot {
       this.status = 'eat';
       return;
     }
+    if (this.status == 'eat') {
+      if (this.getHungry() === '5') {
+        this.status = 'spawn';
+        return;
+      }
+    }
 
     const dotStyle = this.object.style;
     let oldFood = undefined;

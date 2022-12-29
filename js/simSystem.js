@@ -16,14 +16,14 @@ class SimSystem {
 
   init() {
     if (this.dotList.length != 0) {
-      const hungryList = this.foodList.sort((a, b) => {
+      const hungryList = this.dotList.sort((a, b) => {
         if (a === typeof Dot && b === typeof Dot)
           return a.getHungry() - b.getHungry();
       });
 
-      this.dotList.forEach((dot, i) => {
+      hungryList.forEach((dot, i) => {
         setTimeout(() => {
-          dot.findObjective(hungryList);
+          dot.findObjective(this.foodList);
           this.processingDot(dot);
         }, i * (1000 / this.dotList.length));
       });
@@ -54,6 +54,14 @@ class SimSystem {
         this.randomSpawnFood();
         break;
 
+      case dot.status === 'spawn': //spawn new
+        this.addDot(
+          Number(dot.object.style.left.replace(/px$/, '')),
+          Number(dot.object.style.top.replace(/px$/, ''))
+        );
+        dot.setHungry(2);
+        break;
+
       default: //wait
         dot.moveDot([
           Math.floor(Math.random() * 21 - 10),
@@ -71,7 +79,7 @@ class SimSystem {
     food.className = 'food';
     food.id = this.foodCount + 'f';
     food.setAttribute('style', `left:${x}px; top:${y}px; z-index:0;`);
-    food.dataset.satiety = 0.2;
+    food.dataset.satiety = -0.4;
     return food;
   }
 
@@ -91,16 +99,21 @@ class SimSystem {
     dot.className = 'dot';
     dot.id = this.dotCount;
     dot.setAttribute('style', `left:${x}px; top:${y}px; z-index:1;`);
-    dot.dataset.hungry = 4;
+    dot.dataset.hungry = 3;
     return dot;
   }
 
   addDot(x, y) {
     this.table.insertAdjacentElement('afterbegin', this.createDotObject(x, y));
-    this.dotList.push(new Dot('dot', document.getElementById(this.dotCount)));
+    this.dotList.push(
+      new Dot('dot', document.getElementById(this.dotCount), this.incDotCount())
+    );
   }
 
   removeDot(obj) {
+    if (obj.objective !== undefined) {
+      obj.objective.reserved = false;
+    }
     this.dotList = this.dotList.filter(function (value) {
       return value.id != obj.id;
     });
@@ -115,18 +128,20 @@ class SimSystem {
   }
 
   incFoodCount() {
+    const param = this.foodCount;
     this.foodCount += 1;
     if (!Number.isSafeInteger(this.foodCount)) {
       this.foodCount = 0;
     }
-    return this.foodCount;
+    return param;
   }
   incDotCount() {
+    const param = this.dotCount;
     this.dotCount += 1;
     if (!Number.isSafeInteger(this.dotCount)) {
       this.dotCount = 0;
     }
-    return this.dotCount;
+    return param;
   }
   eatDot(dot, food) {
     dot.eat(Number(food.object.dataset.satiety));

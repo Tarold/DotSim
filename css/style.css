@@ -11,6 +11,7 @@ main {
   border: 1px solid grey;
   position: relative;
   transform: scale(10);
+  transition: all 0.5s;
 }
 .dot,
 .food {
@@ -30,12 +31,18 @@ main {
 /*
 .dot::after {
   content: attr(data-hungry);
-}*/
-
+}
+.food::after {
+  content: attr(data-satiety);
+}
+*/
 [data-satiety^='1'] {
   background-color: green;
 }
 
+[data-satiety^='-'] {
+  background-color: lightpink;
+}
 [data-hungry^='2'] {
   background-color: rgb(140, 0, 255);
 }

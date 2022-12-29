@@ -9,10 +9,15 @@ class Food extends StandartDot {
   }
 
   growing() {
-    this.object.dataset.satiety = Number(this.object.dataset.satiety) + 0.1;
+    this.object.dataset.satiety = Number(this.object.dataset.satiety) + 0.2;
     if (this.object.dataset.satiety > 1) {
       this.isGrowUp = true;
+      this.object.dataset.satiety = 1;
     }
+  }
+
+  getSatiety() {
+    return this.object.dataset.satiety;
   }
 }
 
