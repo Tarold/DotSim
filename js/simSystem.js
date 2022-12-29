@@ -152,7 +152,10 @@ class SimSystem {
     const height = localStorage.getItem('height');
     const width = localStorage.getItem('width');
 
-    this.addFood((Math.random() * width) | 0, (Math.random() * height) | 0);
+    this.addFood(
+      (Math.random() * (width - 2)) | 0,
+      (Math.random() * (height - 2)) | 0
+    );
   }
 
   moveToBorders() {

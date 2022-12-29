@@ -110,8 +110,8 @@ class Dot extends StandartDot {
     const height = localStorage.getItem('height');
     const width = localStorage.getItem('width');
 
-    const xTable = height - 1;
-    const yTable = width - 1;
+    const xTable = height - 2;
+    const yTable = width - 2;
 
     if (xDot > xTable) {
       xDot = xTable;
