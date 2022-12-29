@@ -153,21 +153,14 @@ class SimSystem {
     const width = localStorage.getItem('width');
 
     this.addFood(
-      (Math.random() * (width - 2)) | 0,
-      (Math.random() * (height - 2)) | 0
+      (Math.random() * (width - 1)) | 0,
+      (Math.random() * (height - 1)) | 0
     );
   }
 
   moveToBorders() {
-    const list = [...this.dotList, ...this.foodList];
-    const a = new Dot();
-    list.forEach((dot) => {
-      const [x, y] = a.checkForBorders(
-        Number(dot.object.style.left.replace(/px$/, '')),
-        Number(dot.object.style.top.replace(/px$/, ''))
-      );
-      dot.object.style.left = x + 'px';
-      dot.object.style.top = y + 'px';
+    [...this.dotList, ...this.foodList].forEach((dot) => {
+      dot.moveToBorders();
     });
   }
 }

@@ -32,10 +32,10 @@ class Dot extends StandartDot {
       if (!food.reserved && (food.isGrowUp || this.getHungry() < 1)) {
         const foodStyle = food.object.style;
         const dist = distance(
-          pxToInt(dotStyle.left),
-          pxToInt(dotStyle.top),
-          pxToInt(foodStyle.left),
-          pxToInt(foodStyle.top)
+          this.pxToInt(dotStyle.left),
+          this.pxToInt(dotStyle.top),
+          this.pxToInt(foodStyle.left),
+          this.pxToInt(foodStyle.top)
         );
         if (oldDist > dist) {
           oldDist = dist;
@@ -83,10 +83,10 @@ class Dot extends StandartDot {
   }
 
   findPath(object) {
-    let xDot = pxToInt(this.object.style.left);
-    let yDot = pxToInt(this.object.style.top);
-    let xTarget = pxToInt(object.style.left);
-    let yTarget = pxToInt(object.style.top);
+    const xDot = this.pxToInt(this.object.style.left);
+    const yDot = this.pxToInt(this.object.style.top);
+    const xTarget = this.pxToInt(object.style.left);
+    const yTarget = this.pxToInt(object.style.top);
 
     const x = xTarget - xDot;
     const y = yTarget - yDot;
@@ -95,8 +95,8 @@ class Dot extends StandartDot {
   }
 
   moveDot([x, y]) {
-    let xDot = pxToInt(this.object.style.left);
-    let yDot = pxToInt(this.object.style.top);
+    let xDot = this.pxToInt(this.object.style.left);
+    let yDot = this.pxToInt(this.object.style.top);
 
     [xDot, yDot] = this.checkForBorders(xDot + x, yDot + y);
 
@@ -105,37 +105,10 @@ class Dot extends StandartDot {
 
     this.object.dataset.hungry -= this.hungryForStep;
   }
-
-  checkForBorders(xDot, yDot) {
-    const height = localStorage.getItem('height');
-    const width = localStorage.getItem('width');
-
-    const xTable = height - 2;
-    const yTable = width - 2;
-
-    if (xDot > xTable) {
-      xDot = xTable;
-    } else if (xDot < 0) {
-      xDot = 0;
-    }
-
-    if (yDot > yTable) {
-      yDot = yTable;
-    } else if (yDot < 0) {
-      yDot = 0;
-    }
-
-    return [xDot, yDot];
-  }
 }
 
 function distance(x1, y1, x2, y2) {
   return Math.hypot(x2 - x1, y2 - y1);
-}
-
-function pxToInt(variable) {
-  let num = Number(variable.replace(/px$/, ''));
-  return num;
 }
 
 export default Dot;
