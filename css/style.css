@@ -18,7 +18,6 @@ main {
   position: absolute;
   width: 1px;
   height: 1px;
-  animation: spawn 1s;
   transition: all 0.5s;
 }
 
@@ -26,7 +25,7 @@ main {
   background-color: blue;
 }
 .food {
-  background-color: lightgreen;
+  background-color: lightpink;
 }
 /*
 .dot::after {
@@ -36,13 +35,31 @@ main {
   content: attr(data-satiety);
 }
 */
-[data-satiety^='1'] {
-  background-color: green;
+
+[data-status='eat'] {
+  animation: eat 0.3s;
 }
 
-[data-satiety^='-'] {
-  background-color: lightpink;
+[data-status='spawn'] {
+  animation: spawn 1s;
 }
+
+[data-status='appearance'] {
+  animation: appear 1s;
+}
+[data-status='dead'] {
+  animation: dead 1s;
+}
+
+[data-satiety^='1'] {
+  background-color: green;
+  animation: grewUp 1s;
+}
+[data-satiety^='0'] {
+  background-color: lightgreen;
+  animation: growUp 1s;
+}
+
 [data-hungry^='2'] {
   background-color: rgb(140, 0, 255);
 }
@@ -59,11 +76,58 @@ main {
   content: attr(data-hungry);
 }
 
-@keyframes spawn {
+@keyframes appear {
   from {
     opacity: 0;
   }
   to {
     opacity: 1;
+  }
+}
+@keyframes dead {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes eat {
+  0% {
+  }
+  50% {
+    scale: 2;
+  }
+  100% {
+  }
+}
+
+@keyframes spawn {
+  0% {
+  }
+  50% {
+    transform: scale(3, 1);
+  }
+  100% {
+  }
+}
+
+@keyframes growUp {
+  0% {
+  }
+  50% {
+    scale: 1.2;
+  }
+  100% {
+  }
+}
+
+@keyframes grewUp {
+  0% {
+  }
+  50% {
+    scale: 1.2;
+  }
+  100% {
   }
 }

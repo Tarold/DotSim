@@ -5,6 +5,17 @@ class StandartDot {
     this.id = id;
   }
 
+  changeDataset(param, value) {
+    this.object.dataset[param] = value;
+  }
+
+  changeStatus(value) {
+    this.changeDataset('status', value);
+  }
+
+  //all for movements
+
+  //teleport to borders
   moveToBorders() {
     const [x, y] = this.checkForBorders(
       this.pxToInt(this.object.style.left),

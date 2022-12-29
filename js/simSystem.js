@@ -4,7 +4,6 @@ import Dot from './dot.js';
 import Food from './food.js';
 
 //TODO Added custom params and css styles
-
 class SimSystem {
   constructor(table) {
     this.dotList = [];
@@ -15,6 +14,15 @@ class SimSystem {
   }
 
   init() {
+    if (this.foodList.length != 0) {
+      this.foodList.forEach((food, i) => {
+        setTimeout(() => {
+          if (!food.isGrowUp()) {
+            food.growing();
+          }
+        }, i * (1000 / this.foodList.length));
+      });
+    }
     if (this.dotList.length != 0) {
       const hungryList = this.dotList.sort((a, b) => {
         if (a === typeof Dot && b === typeof Dot)
@@ -28,48 +36,38 @@ class SimSystem {
         }, i * (1000 / this.dotList.length));
       });
     }
-
-    if (this.foodList.length != 0) {
-      this.foodList.forEach((food, i) => {
-        setTimeout(() => {
-          if (!food.isGrowUp) {
-            food.growing();
-          }
-        }, i * (1000 / this.foodList.length));
-      });
-    }
   }
 
   processingDot(dot) {
-    switch (true) {
-      case dot.status === 'move': //move to eat
+    switch (dot.object.dataset.status) {
+      case 'move': //move to eat
         dot.goingToEat();
-        if (dot.isHungry()) {
-          this.removeDot(dot);
-        }
         break;
 
-      case dot.status === 'eat': //eat
+      case 'eat': //eat
         this.eatDot(dot, dot.objective);
         this.randomSpawnFood();
         break;
 
-      case dot.status === 'spawn': //spawn new
+      case 'spawn': //spawn new
         this.addDot(
-          Number(dot.object.style.left.replace(/px$/, '')),
-          Number(dot.object.style.top.replace(/px$/, ''))
+          dot.pxToInt(dot.object.style.left),
+          dot.pxToInt(dot.object.style.top)
         );
         dot.setHungry(2);
         break;
 
-      default: //wait
+      case 'wait': //wait
         dot.moveDot([
           Math.floor(Math.random() * 21 - 10),
           Math.floor(Math.random() * 21 - 10),
         ]);
-        if (dot.isHungry()) {
-          this.removeDot(dot);
-        }
+        break;
+
+      case 'remove':
+        this.removeDot(dot);
+        break;
+      default: //appear dead
         break;
     }
   }
@@ -78,8 +76,12 @@ class SimSystem {
     const food = document.createElement('div');
     food.className = 'food';
     food.id = this.foodCount + 'f';
-    food.setAttribute('style', `left:${x}px; top:${y}px; z-index:0;`);
+    food.setAttribute(
+      'style',
+      `left:${x}px; top:${y}px; z-index:0; status:appearance;`
+    );
     food.dataset.satiety = -0.4;
+    food.dataset.status = 'appearance';
     return food;
   }
 
@@ -100,6 +102,7 @@ class SimSystem {
     dot.id = this.dotCount;
     dot.setAttribute('style', `left:${x}px; top:${y}px; z-index:1;`);
     dot.dataset.hungry = 3;
+    dot.dataset.status = 'appearance';
     return dot;
   }
 

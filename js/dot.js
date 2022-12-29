@@ -6,50 +6,59 @@ class Dot extends StandartDot {
   constructor(name, object, id) {
     super(name, object, id);
 
-    this.status = undefined;
     this.objective = undefined;
     this.hungryForStep = 0.2;
     this.limitHungry = 5;
   }
 
   findObjective(foodList) {
-    if (this.status === 'move') {
-      this.status = 'eat';
-      return;
-    }
-    if (this.status == 'eat') {
-      if (this.getHungry() === '5') {
-        this.status = 'spawn';
-        return;
-      }
-    }
+    const status = this.object.dataset.status;
+    switch (true) {
+      case status === 'move':
+        this.changeStatus('eat');
+        break;
 
-    const dotStyle = this.object.style;
-    let oldFood = undefined;
-    let oldDist = Infinity;
+      case status == 'eat' && this.getHungry() === '5':
+        this.changeStatus('spawn');
+        break;
 
-    foodList.forEach((food) => {
-      if (!food.reserved && (food.isGrowUp || this.getHungry() < 1)) {
-        const foodStyle = food.object.style;
-        const dist = distance(
-          this.pxToInt(dotStyle.left),
-          this.pxToInt(dotStyle.top),
-          this.pxToInt(foodStyle.left),
-          this.pxToInt(foodStyle.top)
-        );
-        if (oldDist > dist) {
-          oldDist = dist;
-          oldFood = food;
+      case status == 'appearance':
+        this.changeStatus('appear');
+        break;
+
+      case status == 'dead':
+        this.changeStatus('remove');
+        break;
+
+      default:
+        const dotStyle = this.object.style;
+        let oldFood = undefined;
+        let oldDist = Infinity;
+
+        foodList.forEach((food) => {
+          if (!food.reserved && (food.isGrowUp() || this.getHungry() < 1)) {
+            const foodStyle = food.object.style;
+            const dist = distance(
+              this.pxToInt(dotStyle.left),
+              this.pxToInt(dotStyle.top),
+              this.pxToInt(foodStyle.left),
+              this.pxToInt(foodStyle.top)
+            );
+            if (oldDist > dist) {
+              oldDist = dist;
+              oldFood = food;
+            }
+          }
+        });
+
+        if (oldDist === Infinity) {
+          this.changeStatus('wait');
+          this.objective = undefined;
+        } else {
+          this.changeStatus('move');
+          this.objective = oldFood;
         }
-      }
-    });
-
-    if (oldDist === Infinity) {
-      this.status = 'wait';
-      this.objective = undefined;
-    } else {
-      this.status = 'move';
-      this.objective = oldFood;
+        break;
     }
   }
 
@@ -104,6 +113,11 @@ class Dot extends StandartDot {
     this.object.style.top = yDot + 'px';
 
     this.object.dataset.hungry -= this.hungryForStep;
+
+    if (this.isHungry()) {
+      console.log('now :>> ');
+      this.changeStatus('dead');
+    }
   }
 }
 
