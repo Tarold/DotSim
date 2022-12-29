@@ -5,13 +5,15 @@ class Food extends StandartDot {
     super(name, object, id);
 
     this.reserved = false;
+    this.updateParam();
   }
 
   growing() {
-    this.object.dataset.satiety = Number(this.object.dataset.satiety) + 0.2;
-    if (this.object.dataset.satiety > 1) {
+    this.object.dataset.satiety =
+      Number(this.object.dataset.satiety) + this.speedGrow;
+    if (this.object.dataset.satiety > this.growLimit) {
       this.changeStatus('grewUp');
-      this.changeDataset('satiety', '1');
+      this.changeDataset('satiety', this.growLimit);
     }
   }
   isGrowUp() {
@@ -19,6 +21,10 @@ class Food extends StandartDot {
   }
   getSatiety() {
     return this.object.dataset.satiety;
+  }
+  updateParam() {
+    this.growLimit = Number(localStorage.getItem('limitGrow'));
+    this.speedGrow = Number(localStorage.getItem('speedGrow'));
   }
 }
 

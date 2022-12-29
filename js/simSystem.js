@@ -54,7 +54,7 @@ class SimSystem {
           dot.pxToInt(dot.object.style.left),
           dot.pxToInt(dot.object.style.top)
         );
-        dot.setHungry(2);
+        dot.setHungry(Number(localStorage.getItem('limitHungry')) / 2);
         break;
 
       case 'wait': //wait
@@ -76,10 +76,7 @@ class SimSystem {
     const food = document.createElement('div');
     food.className = 'food';
     food.id = this.foodCount + 'f';
-    food.setAttribute(
-      'style',
-      `left:${x}px; top:${y}px; z-index:0; status:appearance;`
-    );
+    food.setAttribute('style', `left:${x}px; top:${y}px; z-index:0;`);
     food.dataset.satiety = -0.4;
     food.dataset.status = 'appearance';
     return food;
@@ -101,7 +98,7 @@ class SimSystem {
     dot.className = 'dot';
     dot.id = this.dotCount;
     dot.setAttribute('style', `left:${x}px; top:${y}px; z-index:1;`);
-    dot.dataset.hungry = 3;
+    dot.dataset.hungry = Number(localStorage.getItem('limitHungry')) / 2;
     dot.dataset.status = 'appearance';
     return dot;
   }
@@ -161,9 +158,10 @@ class SimSystem {
     );
   }
 
-  moveToBorders() {
+  setNewParam() {
     [...this.dotList, ...this.foodList].forEach((dot) => {
       dot.moveToBorders();
+      dot.updateParam();
     });
   }
 }

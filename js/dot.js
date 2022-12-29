@@ -9,6 +9,8 @@ class Dot extends StandartDot {
     this.objective = undefined;
     this.hungryForStep = 0.2;
     this.limitHungry = 5;
+    this.recipeLimit = 1;
+    this.updateParam();
   }
 
   findObjective(foodList) {
@@ -18,7 +20,7 @@ class Dot extends StandartDot {
         this.changeStatus('eat');
         break;
 
-      case status == 'eat' && this.getHungry() === '5':
+      case status == 'eat' && this.getHungry() === String(this.limitHungry):
         this.changeStatus('spawn');
         break;
 
@@ -29,14 +31,19 @@ class Dot extends StandartDot {
       case status == 'dead':
         this.changeStatus('remove');
         break;
-
+      case this.isHungry():
+        this.changeStatus('dead');
+        break;
       default:
         const dotStyle = this.object.style;
         let oldFood = undefined;
         let oldDist = Infinity;
 
         foodList.forEach((food) => {
-          if (!food.reserved && (food.isGrowUp() || this.getHungry() < 1)) {
+          if (
+            !food.reserved &&
+            (food.isGrowUp() || this.getHungry() < this.recipeLimit)
+          ) {
             const foodStyle = food.object.style;
             const dist = distance(
               this.pxToInt(dotStyle.left),
@@ -113,11 +120,12 @@ class Dot extends StandartDot {
     this.object.style.top = yDot + 'px';
 
     this.object.dataset.hungry -= this.hungryForStep;
+  }
 
-    if (this.isHungry()) {
-      console.log('now :>> ');
-      this.changeStatus('dead');
-    }
+  updateParam() {
+    this.hungryForStep = Number(localStorage.getItem('hungryForStep'));
+    this.limitHungry = Number(localStorage.getItem('limitHungry'));
+    this.recipeLimit = Number(localStorage.getItem('recipeLimit'));
   }
 }
 

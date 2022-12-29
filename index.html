@@ -6,29 +6,106 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="css/reset.css" />
     <link rel="stylesheet" href="css/style.css" />
-    <title>Document</title>
+    <title>DotSim</title>
   </head>
   <body>
-    <input type="checkbox" id="horns" name="horns" />
-    <input
-      type="number"
-      id="height"
-      name="height"
-      min="2"
-      max="500"
-      value="100"
-    />
-    <input
-      type="number"
-      id="width"
-      name="width"
-      min="2"
-      max="500"
-      value="100"
-    />
-    <button id="Apply">Apply</button>
     <main>
+      <h1 class="title">DotSim</h1>
       <div class="table"></div>
+      <section class="input">
+        <div class="tableParam">
+          <h2>Table</h2>
+          <label>
+            Width/height
+            <input
+              type="number"
+              id="width"
+              name="width"
+              min="1"
+              max="500"
+              value="50"
+            />
+            <input
+              type="number"
+              id="height"
+              name="height"
+              min="1"
+              max="500"
+              value="50"
+            />
+          </label>
+          <label>
+            Scale<input
+              type="number"
+              name="scale"
+              id="scale"
+              min="1"
+              max="500"
+              value="10"
+          /></label>
+        </div>
+        <div class="dotParam advanced hide">
+          <h2>Dot</h2>
+          <label>
+            hungryForStep
+            <input
+              type="number"
+              id="hungryForStep"
+              name="hungryForStep"
+              value="0.2"
+            />
+          </label>
+          <label>
+            limitHungry
+            <input type="number" id="limitHungry" name="limitHungry" value="5"
+          /></label>
+          <label>
+            recipeLimit
+            <input type="number" id="recipeLimit" name="recipeLimit" value="1"
+          /></label>
+        </div>
+        <div class="foodParam advanced hide">
+          <h2>Food</h2>
+
+          <label
+            >startSatiety<input
+              type="number"
+              id="startSatiety"
+              name="startSatiety"
+              value="-0.4"
+          /></label>
+          <label
+            >limitGrow<input
+              type="number"
+              id="limitGrow"
+              name="limitGrow"
+              value="1"
+          /></label>
+
+          <label
+            >speedGrow<input
+              type="number"
+              id="speedGrow"
+              name="speedGrow"
+              value="0.2"
+          /></label>
+        </div>
+        <div class="buttParam">
+          <label>
+            Advanced settings:
+            <input type="checkbox" id="advanced" name="advanced" />
+          </label>
+          <button id="Apply">Apply</button>
+          <button id="Default">Default</button>
+          <button id="Reset">Reset Change</button>
+        </div>
+      </section>
+      <div class="inputDots">
+        <p>Spawn dots on table:</p>
+        <button class="dotButton on">Dot</button>
+        <button class="foodButton">Food</button>
+        <button id="options">Options</button>
+      </div>
     </main>
     <script type="module" src="./js/index.js"></script>
   </body>

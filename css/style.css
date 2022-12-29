@@ -1,18 +1,126 @@
+body {
+  box-sizing: border-box;
+  font-family: 'Inter var', ui-sans-serif, system-ui, -apple-system, system-ui,
+    'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.25rem;
+}
 main {
   width: 100vw;
   height: 100vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 }
+.title {
+  font-size: 5vh;
+  position: absolute;
+  top: 2vh;
+  text-shadow: 6px 6px 0px rgba(0, 0, 0, 0.2);
+}
+.input {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: space-around;
+  gap: 10px;
+  padding: 10px 10px 15px;
+  background-color: #fff;
+  border: 1px solid rgb(209, 213, 219);
+  border-radius: 0 0 0.5rem 0.5rem;
+  z-index: 3;
+  max-width: 100vw;
+  top: -200px;
+  position: absolute;
+  transition: top 1s;
+}
+.visible {
+  top: 0;
+}
+.tableParam,
+.dotParam,
+.foodParam,
+.buttParam {
+  display: flex;
+  flex-direction: column;
+  min-width: 300px;
+  justify-content: space-between;
+}
+
+button {
+  background-color: #ffffff;
+  border: 1px solid rgb(209, 213, 219);
+  border-radius: 0.5rem;
+  color: #111827;
+  font-family: 'Inter var', ui-sans-serif, system-ui, -apple-system, system-ui,
+    'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.input > div > button {
+  width: 100%;
+}
+
+.hide {
+  display: none;
+}
+
+label {
+  width: 100%;
+  display: flex;
+  gap: 5px;
+  justify-content: space-between;
+}
+
+#advanced {
+  margin-right: auto;
+}
 .table {
+  position: absolute;
   width: 100px;
   height: 100px;
-  border: 1px solid grey;
-  position: relative;
-  transform: scale(10);
+  border: 1px solid rgb(209, 213, 219);
   transition: all 0.5s;
+  z-index: 0;
+  border-radius: 1px;
 }
+
+.on {
+  background-color: aquamarine;
+}
+.inputDots {
+  display: flex;
+  flex-direction: column;
+  width: 100px;
+  margin: 0 15px 0 auto;
+  text-align: center;
+  z-index: 3;
+}
+.inputDots > p {
+  padding: 5px;
+  text-shadow: 1px 1px 2px #fff;
+}
+.foodButton,
+.dotButton,
+#options {
+  height: 100px;
+}
+.dotButton {
+  border-radius: 0.5rem 0.5rem 0 0;
+}
+.foodButton {
+  border-radius: 0 0 0.5rem 0.5rem;
+}
+#options {
+  margin-top: 10px;
+}
+
 .dot,
 .food {
   position: absolute;
@@ -22,7 +130,7 @@ main {
 }
 
 .dot {
-  background-color: blue;
+  background-color: rgb(140, 0, 255);
 }
 .food {
   background-color: lightpink;
@@ -47,6 +155,10 @@ main {
 [data-status='appearance'] {
   animation: appear 1s;
 }
+[data-status='remove'] {
+  opacity: 0;
+}
+
 [data-status='dead'] {
   animation: dead 1s;
 }
@@ -129,5 +241,21 @@ main {
     scale: 1.2;
   }
   100% {
+  }
+}
+@media screen and (max-width: 1300px) {
+  .input {
+    top: -250px;
+  }
+  .visible {
+    top: 0;
+  }
+}
+@media screen and (max-width: 700px) {
+  .input {
+    top: -380px;
+  }
+  .visible {
+    top: 0;
   }
 }
