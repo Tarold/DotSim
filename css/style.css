@@ -110,6 +110,7 @@ label {
 .dotButton,
 #options {
   height: 100px;
+  width: 100px;
 }
 .dotButton {
   border-radius: 0.5rem 0.5rem 0 0;
@@ -255,7 +256,33 @@ label {
   .input {
     top: -380px;
   }
+
+  .inputDots {
+    width: 100vw;
+    flex-direction: row;
+    margin: auto 0 0 0;
+    justify-content: center;
+    align-items: center;
+  }
+  .inputDots > p {
+    width: 60px;
+  }
+  .dotButton {
+    border-radius: 0.5rem 0 0 0.5rem;
+  }
+  .foodButton {
+    border-radius: 0 0.5rem 0.5rem 0;
+  }
+  #options {
+    margin: 0 0 0 10px;
+  }
   .visible {
     top: 0;
+  }
+  .foodButton,
+  .dotButton,
+  #options {
+    height: 60px;
+    width: 60px;
   }
 }

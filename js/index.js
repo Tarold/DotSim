@@ -117,7 +117,7 @@ function buttApplyData() {
 function buttDefaultData() {
   wTable.value = 50;
   hTable.value = 50;
-  sTable.value = 10;
+  sTable.value = 6;
 
   hungryFS.value = 0.2;
   limitH.value = 5;

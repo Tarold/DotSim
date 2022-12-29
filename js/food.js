@@ -1,4 +1,4 @@
-import StandartDot from './StandartDot.js';
+import StandartDot from './standartDot.js';
 
 class Food extends StandartDot {
   constructor(name, object, id) {

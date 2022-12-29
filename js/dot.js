@@ -1,6 +1,6 @@
 'use strict';
 
-import StandartDot from './StandartDot.js';
+import StandartDot from './standartDot.js';
 
 class Dot extends StandartDot {
   constructor(name, object, id) {
