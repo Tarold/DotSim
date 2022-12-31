@@ -1,0 +1,121 @@
+.dot,
+.food {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  transition: all 0.5s;
+}
+
+.dot {
+  background-color: rgb(140, 0, 255);
+}
+.food {
+  background-color: green;
+}
+/*
+.dot::after {
+  content: attr(data-hungry);
+}
+
+.food::after {
+  content: attr(data-satiety);
+}
+*/
+[data-status='eat'] {
+  animation: eat 0.3s;
+}
+
+[data-status='spawn'] {
+  animation: spawn 1s;
+}
+
+[data-status='appearance'] {
+  animation: appear 1s;
+}
+[data-status='remove'] {
+  opacity: 0;
+}
+
+[data-status='dead'] {
+  animation: dead 1s;
+}
+
+[data-satiety^='1'] {
+  background-color: green;
+  animation: grewUp 1s;
+}
+[data-satiety^='0'] {
+  background-color: lightgreen;
+  animation: growUp 1s;
+}
+[data-satiety^='-'] {
+  background-color: lightpink;
+}
+
+[data-hungry^='2'] {
+  background-color: rgb(140, 0, 255);
+}
+
+[data-hungry^='1'] {
+  background-color: rgb(182, 33, 150);
+}
+[data-hungry^='0'],
+[data-hungry^='-'] {
+  background-color: rgb(255, 0, 0);
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes dead {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes eat {
+  0% {
+  }
+  50% {
+    scale: 2;
+  }
+  100% {
+  }
+}
+
+@keyframes spawn {
+  0% {
+  }
+  50% {
+    transform: scale(3, 1);
+  }
+  100% {
+  }
+}
+
+@keyframes growUp {
+  0% {
+  }
+  50% {
+    scale: 1.2;
+  }
+  100% {
+  }
+}
+
+@keyframes grewUp {
+  0% {
+  }
+  50% {
+    scale: 1.2;
+  }
+  100% {
+  }
+}
