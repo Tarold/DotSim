@@ -135,7 +135,7 @@ label {
   .inputDots {
     width: 100vw;
     flex-direction: row;
-    margin: auto 0 0 0;
+    margin: auto 0 60px 0;
     justify-content: center;
     align-items: center;
   }
