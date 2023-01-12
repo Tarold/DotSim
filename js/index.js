@@ -11,8 +11,9 @@ const advanced = document.querySelector('#advanced');
 const advancedOptions = document.querySelectorAll('.advanced');
 const optionsSection = document.querySelector('.input');
 const options = document.querySelector('#options');
+const count = document.querySelector('#dotsCount');
 
-const sys = new SimSystem(table);
+const sys = new SimSystem(table, count);
 const settings = new Settings(table);
 
 function init() {

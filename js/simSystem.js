@@ -5,12 +5,13 @@ import Food from './food.js';
 
 //TODO Added custom params and css styles
 class SimSystem {
-  constructor(table) {
+  constructor(table, count) {
     this.dotList = [];
     this.dotCount = 0;
     this.foodList = [];
     this.foodCount = 0;
     this.table = table;
+    this.count = count;
   }
 
   init() {
@@ -91,6 +92,7 @@ class SimSystem {
         this.incFoodCount() + 'f'
       )
     );
+    this.updateCounter();
   }
 
   createDotObject(x, y) {
@@ -108,6 +110,7 @@ class SimSystem {
     this.dotList.push(
       new Dot('dot', document.getElementById(this.dotCount), this.incDotCount())
     );
+    this.updateCounter();
   }
 
   removeDot(obj) {
@@ -118,6 +121,7 @@ class SimSystem {
       return value.id != obj.id;
     });
     obj.object.remove();
+    this.updateCounter();
   }
 
   removeFood(obj) {
@@ -125,6 +129,7 @@ class SimSystem {
       return value.id != obj.id;
     });
     obj.object.remove();
+    this.updateCounter();
   }
 
   incFoodCount() {
@@ -135,6 +140,7 @@ class SimSystem {
     }
     return param;
   }
+
   incDotCount() {
     const param = this.dotCount;
     this.dotCount += 1;
@@ -143,6 +149,7 @@ class SimSystem {
     }
     return param;
   }
+
   eatDot(dot, food) {
     dot.eat(Number(food.object.dataset.satiety));
     this.removeFood(food);
@@ -163,6 +170,10 @@ class SimSystem {
       dot.moveToBorders();
       dot.updateParam();
     });
+  }
+
+  updateCounter() {
+    this.count.innerHTML = `Dots count: ${this.dotList.length} <br> Food count: ${this.foodList.length}`;
   }
 }
 
