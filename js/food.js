@@ -11,7 +11,7 @@ class Food extends StandartDot {
   growing() {
     this.object.dataset.satiety =
       Number(this.object.dataset.satiety) + this.speedGrow;
-    if (this.object.dataset.satiety > this.growLimit) {
+    if (this.object.dataset.satiety >= this.growLimit) {
       this.changeStatus('grewUp');
       this.changeDataset('satiety', this.growLimit);
     }

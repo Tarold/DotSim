@@ -78,7 +78,7 @@ class SimSystem {
     food.className = 'food';
     food.id = this.foodCount + 'f';
     food.setAttribute('style', `left:${x}px; top:${y}px; z-index:0;`);
-    food.dataset.satiety = -0.4;
+    food.dataset.satiety = Number(localStorage.getItem('startSatiety'));
     food.dataset.status = 'appearance';
     return food;
   }
