@@ -60,7 +60,11 @@ function init() {
     e.target.classList.toggle('on');
   };
 
-  buttReset.onclick = settings.applyData;
-  buttDefault.onclick = settings.buttDefaultData;
+  buttReset.onclick = () => {
+    settings.applyData();
+  };
+  buttDefault.onclick = () => {
+    settings.setDefaultData();
+  };
 }
 init();
