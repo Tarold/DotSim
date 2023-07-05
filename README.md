@@ -15,10 +15,10 @@ To adjust the size of the table, you can go to the settings and increase its wid
 
 ## Key Features
 
-Environment Settings: Users can set up the simulation environment, including table size, food satiety, food speed grow, hungry for dot step.
-Animation: The simulation provides real-time animation, with dots smoothly moving, division, eating.
-Dot Interactions: Dots can interact with each other based on predefined rules, such as reservation food or hungry rush (will eat even non-grown food).
-User Controls: Users can spawn food and dots, or input mechanisms to modify simulation settings.
+1. Environment Settings: Users can set up the simulation environment, including table size, food satiety, food speed grow, hungry for dot step.
+2. Animation: The simulation provides real-time animation, with dots smoothly moving, division, eating.
+3. Dot Interactions: Dots can interact with each other based on predefined rules, such as reservation food or hungry rush (will eat even non-grown food).
+4. User Controls: Users can spawn food and dots, or input mechanisms to modify simulation settings.
 
 ## P.S.
 
