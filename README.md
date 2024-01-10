@@ -3,6 +3,10 @@
 DotSim is a website with possibility simulate life of dots.
 DotSim is a pet project developed by a junior full-stack developer using JavaScript, CSS, and HTML. It is a simulation game that focuses on object-oriented programming (OOP) principles, with well-defined classes, and separation of concerns. The project does not rely on any external modules or libraries.
 
+## See some details
+
+https://youtu.be/uks5LIAVoE8?si=CUqNdVuCYmK3PawN
+
 ## Open
 
 https://tarold.github.io/DotSim/
